@@ -246,7 +246,7 @@ angular.module('BE.seed.controller.data_upload_modal', [])
               $scope.uploader.in_progress = false;
               $scope.uploader.progress = 100;
               $scope.step.number = 14;
-              $scope.step_14_message = (_.size(file.message['warnings']) > 0) ? file.message['warnings'] : null;
+              $scope.step_14_message = (_.size(file.message.warnings) > 0) ? file.message.warnings : null;
             } else {
               $scope.dataset.import_file_id = file.file_id;
 

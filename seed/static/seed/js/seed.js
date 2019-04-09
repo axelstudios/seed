@@ -1102,7 +1102,7 @@ SEED_app.config(['stateHelperProvider', '$urlRouterProvider', '$locationProvider
         resolve: {
           inventory: ['$stateParams', 'inventory_service', function ($stateParams, inventory_service ) {
             // if ($stateParams.inventory_type === 'properties') {
-              return inventory_service.get_properties(1, undefined, undefined, undefined);
+            return inventory_service.get_properties(1, undefined, undefined, undefined);
             // } else if ($stateParams.inventory_type === 'taxlots') {
             //   return inventory_service.get_taxlots(1, undefined, undefined, undefined);
             // }
