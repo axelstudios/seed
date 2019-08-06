@@ -1312,7 +1312,7 @@ class Column(models.Model):
     @staticmethod
     def retrieve_priorities(org_id):
         """
-        Return the list of priorties for the columns. Result will be in the form of:
+        Return the list of priorities for the columns. Result will be in the form of:
 
         .. code-block:: json
 
