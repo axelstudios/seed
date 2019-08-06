@@ -7,10 +7,15 @@ required approvals from the U.S. Department of Energy) and contributors.
 All rights reserved.  # NOQA
 """
 
+from rest_framework import (
+    response,
+    status,
+)
+
+from seed.filters import ColumnListSettingFilterBackend
 from seed.models import (
     ColumnListSetting
 )
-from seed.pagination import NoPagination
 from seed.serializers.column_list_settings import (
     ColumnListSettingSerializer,
 )
@@ -42,6 +47,11 @@ class ColumnListingViewSet(OrgValidateMixin, SEEDOrgCreateUpdateModelViewSet):
     """
     serializer_class = ColumnListSettingSerializer
     model = ColumnListSetting
-    pagination_class = NoPagination
+    filter_backends = (ColumnListSettingFilterBackend,)
+    pagination_class = None
     # force_parent = True  # Ideally the column list settings would inherit from the parent,
     # but not yet.
+
+    # def list(self, request, **kwargs):
+    #     status_code = status.HTTP_200_OK
+    #     return response.Response({}, status=status_code)
