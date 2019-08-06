@@ -7,6 +7,7 @@
  * UI Grid overrides
  */
 angular.module('ui.grid').config(['$provide', function ($provide) {
+  // SEED translation overrides
   $provide.decorator('i18nService', ['$delegate', function ($delegate) {
     var pagination = $delegate.get('en').pagination;
     pagination.sizes = 'properties per page';
@@ -14,6 +15,8 @@ angular.module('ui.grid').config(['$provide', function ($provide) {
     $delegate.add('en', {pagination: pagination});
     return $delegate;
   }]);
+
+  // No change, but necessary (@name getMenuItems)
   $provide.decorator('uiGridGridMenuService', ['$delegate', 'i18nService', 'gridUtil', function ($delegate, i18nService, gridUtil) {
     $delegate.getMenuItems = function ($scope) {
       var menuItems = [];
@@ -46,6 +49,8 @@ angular.module('ui.grid').config(['$provide', function ($provide) {
     };
     return $delegate;
   }]);
+
+  // compile function from `.directive('uiGridMenuItem'`
   $provide.decorator('uiGridMenuItemDirective', ['$delegate', 'gridUtil', '$compile', 'i18nService', function ($delegate, gridUtil, $compile, i18nService) {
     $delegate[0].compile = function () {
       return {
@@ -106,8 +111,9 @@ angular.module('ui.grid').config(['$provide', function ($provide) {
               if (!$scope.leaveOpen) {
                 $scope.$emit('hide-menu');
               } else {
+                // ==================== SEED FIX ====================
                 /*
-                 * XXX: Fix after column refactor
+                 * Fix after column refactor
                  * Ideally the focus would remain on the item.
                  * However, since there are two menu items that have their 'show' property toggled instead. This is a quick fix.
                  */
@@ -115,6 +121,7 @@ angular.module('ui.grid').config(['$provide', function ($provide) {
                 var id = parseInt($elm[0].id.match(/\d+/)[0]);
                 var selector = '#menuitem-' + (id % 2 ? id + 1 : id - 1);
                 gridUtil.focus.bySelector(angular.element(selector), 'button[type=button]', true);
+                // ==================== END SEED FIX ====================
               }
             }
           };
@@ -126,6 +133,7 @@ angular.module('ui.grid').config(['$provide', function ($provide) {
     return $delegate;
   }]);
 
+  // From `@name search`
   $provide.decorator('rowSearcher', ['$delegate', 'gridUtil', function ($delegate, gridUtil) {
     $delegate.search = function (grid, rows, columns) {
       if (!rows) {

@@ -557,6 +557,7 @@ angular.module('BE.seed.service.inventory', []).factory('inventory_service', [
     inventory_service.combinedFilter = function () {
       return {
         condition: function (searchTerm, cellValue) {
+          console.log(searchTerm, cellValue);
           if (_.isNil(cellValue)) cellValue = '';
           var match = true;
           var searchTerms = _.map(_.split(searchTerm, ','), _.trim);
@@ -626,10 +627,13 @@ angular.module('BE.seed.service.inventory', []).factory('inventory_service', [
       };
     };
 
-    var dateRegex = /^(=|!=)?\s*(null|\d{4}(?:-\d{2}(?:-\d{2})?)?)$|^(<=?|>=?)\s*(\d{4}(?:-\d{2}(?:-\d{2})?)?)$/;
+    var dateRegex = /^(!?=)?\s*(""|\d{4}(?:-\d{2}(?:-\d{2})?)?)$|^(<=?|>=?)\s*(\d{4}(?:-\d{2}(?:-\d{2})?)?)$/;
     inventory_service.dateFilter = function () {
       return {
         condition: function (searchTerm, cellValue) {
+          console.warn('hey');
+          console.log(searchTerm, cellValue);
+          if (_.isNil(cellValue)) cellValue = '';
           var match = true;
           var cellDate = Date.parse(cellValue);
           var d = new Date(cellValue);
@@ -640,6 +644,8 @@ angular.module('BE.seed.service.inventory', []).factory('inventory_service', [
           };
           var searchTerms = _.map(_.split(_.replace(searchTerm, /\\-/g, '-'), ','), _.trim);
           _.forEach(searchTerms, function (search) {
+          // console.log('search:', search);
+          // console.log('cellValue:', cellValue);
             var filterData = search.match(dateRegex);
             if (filterData) {
               var operator, value, v, ymd;
@@ -655,13 +661,15 @@ angular.module('BE.seed.service.inventory', []).factory('inventory_service', [
                 };
                 if (_.isUndefined(operator) || _.startsWith(operator, '=')) {
                   // Equal
-                  match = (value === 'null') ? (_.isNil(cellValue)) : (
+                  console.log(value);
+                  if (value === '""') console.log('yep');
+                  match = (value === '""') ? (_.isEmpty(cellValue)) : (
                     cellYMD.y === ymd.y && (_.isNaN(ymd.m) || cellYMD.m === ymd.m) && (_.isNaN(ymd.d) || cellYMD.d === ymd.d)
                   );
                   return match;
                 } else {
                   // Not equal
-                  match = (value === 'null') ? (!_.isNil(cellValue)) : (
+                  match = (value === '""') ? (!_.isEmpty(cellValue)) : (
                     cellYMD.y !== ymd.y || (!_.isNaN(ymd.m) && cellYMD.y === ymd.y && cellYMD.m !== ymd.m) || (!_.isNaN(ymd.m) && !_.isNaN(ymd.d) && cellYMD.y === ymd.y && cellYMD.m === ymd.m && cellYMD.d !== ymd.d)
                   );
                   return match;
